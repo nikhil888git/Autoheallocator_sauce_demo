@@ -1,0 +1,5 @@
+[ {
+  "original" : "[data-test='error']",
+  "healed" : ".error-message-container",
+  "strategy" : "heuristic"
+} ]
