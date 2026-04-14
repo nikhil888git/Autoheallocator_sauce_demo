@@ -34,6 +34,7 @@ Test Runner	TestNG
 API / AI Calls	REST Assured
 AI Integration	Google GenAI / OpenAI / DeepSeek
 Reporting	Allure Reports / Extent Reports
+
 📁 Project Structure
 Playwright-bdd-asl/
 ├── pom.xml
@@ -59,6 +60,7 @@ Playwright-bdd-asl/
 │   │       │   └── *.feature
 │   │       └── autoheal.properties
 🤖 AI Auto-Heal Architecture
+
 
 The framework follows a multi-layer recovery strategy when locators fail:
 
