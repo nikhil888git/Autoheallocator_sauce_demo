@@ -14,7 +14,8 @@ Google Gemini
 OpenAI
 DeepSeek
 
-This approach ensures minimal test maintenance, even with frequent UI changes, by leveraging a heuristic fallback strategy that reduces reliance on expensive AI calls—saving both time and cost in most scenarios.
+**This approach ensures minimal test maintenance, even with frequent UI changes, by leveraging a heuristic fallback strategy that reduces reliance on expensive AI calls—saving both time and cost in most scenarios.**
+
 ---
 
 ## 🧠 Key Features
