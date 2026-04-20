@@ -8,14 +8,13 @@ This project is a **modern automation testing framework** built using:
 - **Cucumber BDD** for readable business-driven test scenarios  
 - **TestNG** for execution and parallel test orchestration  
 
-👉 The framework includes an **AI-powered Auto-Heal mechanism** that intelligently recovers broken locators using LLMs like:
+👉The framework includes an AI-powered Auto-Heal mechanism that intelligently recovers broken locators using LLMs such as:
 
-- Google Gemini  
-- OpenAI  
-- DeepSeek  
+Google Gemini
+OpenAI
+DeepSeek
 
-This ensures **minimum test maintenance**, even when UI changes frequently.
-
+This approach ensures minimal test maintenance, even with frequent UI changes, by leveraging a heuristic fallback strategy that reduces reliance on expensive AI calls—saving both time and cost in most scenarios.
 ---
 
 ## 🧠 Key Features
