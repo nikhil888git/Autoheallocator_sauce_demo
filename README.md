@@ -219,5 +219,3 @@ Supports:
 * Hybrid UI + API testing
 * CI/CD + Docker ready
 * Designed for real-world scalability
-
-👉 Built with **SDET / QA Architect mindset**
