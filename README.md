@@ -1,126 +1,223 @@
-🚀 Playwright BDD Automation Framework (AI-Powered)
-📌 Overview
-This is a production-grade test automation framework designed using:
-Playwright (Java) – fast, reliable browser automation
-Cucumber BDD – readable business-driven scenarios
-TestNG – execution + parallel orchestration
-REST Assured – API testing layer
-AI Auto-Heal Engine – self-healing locators (USP 🔥)
-Docker + GitHub Actions – CI/CD ready
-👉 Built with scalability, maintainability, and enterprise-grade design principles
-🏆 Key Features
-✅ UI Automation
-Cross-browser support (Chromium, Firefox, WebKit)
-Parallel execution (Thread-safe)
-Page Object Model + Component-based design
-✅ BDD (Behavior Driven Development)
-Gherkin-based feature files
-Step definitions mapped to business flows
-Readable for non-technical stakeholders
-✅ API Testing
-REST Assured integration
-Request/Response validation
-JSON schema validation support
-🔥 AI Auto-Heal (USP)
-Heuristic-based locator recovery
-Fallback locator strategy
-Optional LLM integration
-Self-learning cache mechanism
-📊 Reporting
-Allure Reports
-Extent Reports
-Screenshots on failure
-Logs + execution traces
-⚙️ CI/CD Ready
-GitHub Actions pipeline
-Dockerized execution
-Artifact publishing
-📂 Project Structure
-src/
- ├── main/java/com/framework/
- │   ├── core/        # BaseTest, Hooks, Driver setup
- │   ├── pages/       # Page Object Models
- │   ├── utils/       # Wait, Config, Logger
- │   ├── ai/          # Auto-heal engine
- │   ├── api/         # REST Assured layer
- │   ├── models/      # Request/Response POJOs
- │   └── listeners/   # TestNG listeners
- ├── test/java/com/tests/
- │   ├── ui/
- │   ├── api/
- │   └── integration/
- ├── test/resources/
- │   ├── testdata/
- │   ├── config/
- │   └── features/   # BDD
-reports/
-logs/
-docker/
-.github/workflows/
-⚙️ Setup & Installation
-1️⃣ Clone Repository
-git clone <repo-url>
-cd project-name
-2️⃣ Install Dependencies
+# 🚀 Playwright BDD Automation Framework with AI Auto-Heal
+
+---
+
+## 📌 Overview
+
+This project is a **modern, enterprise-grade automation framework** built using:
+
+* **Playwright (Java)** – fast and reliable browser automation
+* **Cucumber BDD** – business-readable test scenarios
+* **TestNG** – parallel execution and orchestration
+
+👉 The framework integrates an **AI-powered Auto-Heal engine** that intelligently recovers broken locators using LLMs such as:
+
+* Google Gemini
+* OpenAI
+* DeepSeek
+
+It follows a **heuristic-first → AI fallback strategy**, ensuring:
+
+* minimal test maintenance
+* reduced AI cost
+* faster execution
+
+---
+
+## 🧠 Key Features
+
+✔️ BDD-based automation (Gherkin scenarios)
+✔️ AI-powered self-healing locators 🔥
+✔️ Page Object Model (POM) architecture
+✔️ Parallel execution with TestNG
+✔️ Cross-browser support (Playwright)
+✔️ Heuristic + AI fallback strategy
+✔️ Scalable and modular framework design
+
+---
+
+## 🏗️ Tech Stack
+
+| Layer          | Technology                 |
+| -------------- | -------------------------- |
+| Language       | Java 11                    |
+| Automation     | Playwright                 |
+| BDD            | Cucumber                   |
+| Test Runner    | TestNG                     |
+| API / AI Calls | REST Assured               |
+| AI Integration | Gemini / OpenAI / DeepSeek |
+| Reporting      | Allure / Extent            |
+
+---
+
+## 📂 Project Structure
+
+```id="p2h4k9"
+Playwright-bdd-asl/
+├── pom.xml
+├── src/
+│   ├── main/java/com/framework/
+│   │   ├── core/        # Driver, Base, Hooks
+│   │   ├── pages/       # Page Objects
+│   │   ├── utils/       # Wait, Config, Logger
+│   │   ├── ai/          # Auto-heal engine (USP)
+│   │   ├── api/         # REST Assured layer
+│   │   ├── models/      # POJOs
+│   │   └── listeners/   # TestNG listeners
+│
+│   ├── test/java/com/tests/
+│   │   ├── ui/
+│   │   ├── api/
+│   │   └── integration/
+│
+│   ├── test/resources/
+│   │   ├── testdata/
+│   │   ├── config/
+│   │   └── features/
+│
+├── reports/
+├── logs/
+├── docker/
+├── .github/workflows/
+```
+
+---
+
+## ⚙️ Setup & Installation
+
+### Clone the repository
+
+```bash id="1w2x3y"
+git clone <your-repo-url>
+cd Playwright-bdd-asl
+```
+
+### Install dependencies
+
+```bash id="9x8y7z"
 mvn clean install
-3️⃣ Install Playwright Browsers
+```
+
+### Install Playwright browsers
+
+```bash id="3k8d2p"
 mvn exec:java -Dexec.mainClass=com.microsoft.playwright.CLI -Dexec.args="install"
-▶️ Test Execution
-Run all tests
+```
+
+---
+
+## ▶️ Test Execution
+
+### Run all tests
+
+```bash id="8h3k2l"
 mvn test
-Run specific suite
+```
+
+### Run with TestNG suite
+
+```bash id="0k2l3m"
 mvn test -DsuiteXmlFile=testng.xml
-Run in parallel
-Configured via testng.xml
-🧪 BDD Execution
+```
+
+### Run BDD scenarios
+
+```bash id="2j3h4k"
 mvn test -Dcucumber.options="src/test/resources/features"
-🐳 Run with Docker
-docker build -t test-framework .
-docker run test-framework
-⚡ CI/CD (GitHub Actions)
-Pipeline includes:
-Build project
-Install Playwright browsers
-Execute tests
-Generate reports
-Upload artifacts
+```
+
+---
+
+## ⚡ Parallel Execution
+
+* Enabled via **TestNG**
+* Thread-safe driver handling
+* Supports multi-browser execution
+
+---
+
+## 🐳 Docker Execution
+
+```bash id="9l8k7j"
+docker build -t playwright-framework .
+docker run playwright-framework
+```
+
+---
+
+## ⚙️ CI/CD Integration
+
+GitHub Actions pipeline:
+
+* Build project
+* Install Playwright browsers
+* Execute tests
+* Generate reports
+* Upload artifacts
+
 Location:
+
+```
 .github/workflows/ci.yml
-🧠 AI Auto-Heal Flow
-Try original locator
-Apply heuristic matching
-Use fallback locator
-(Optional) Query LLM
-Store working locator
-👉 Ensures resilient test execution
-📊 Reporting
-After execution:
-Allure → allure-report/
-Extent → extent-reports/
-Logs → logs/
-🔐 Configuration
-Environment configs:
+```
+
+---
+
+## 🧠 AI Auto-Heal Strategy
+
+1. Try original locator
+2. Apply heuristic matching
+3. Use cached fallback
+4. Call LLM (if required)
+5. Store working locator
+
+👉 This reduces:
+
+* flaky failures
+* maintenance cost
+* locator breakage impact
+
+---
+
+## 📊 Reporting
+
+* Allure Reports
+* Extent Reports
+* Logs & screenshots on failure
+
+---
+
+## 🔐 Configuration
+
+Config files located at:
+
+```
 src/test/resources/config/
+```
+
 Supports:
-dev / qa / prod environments
-externalized credentials
-.env support
-🧩 Design Principles
-Separation of concerns
-Reusable components
-Scalable architecture
-Thread-safe execution
-Clean reporting & logging
-🤝 Contributing
-Please refer to CONTRIBUTING.md
-📄 Design Documentation
-Refer to:
-DESIGN.md
-👨‍💻 Author
-Built for SDET / QA Architect level automation
-⭐ Why This Framework Stands Out
-AI-powered auto-healing 🔥
-Full-stack testing (UI + API + Integration)
-CI/CD + Docker ready
-Enterprise-grade structure
-👉 Designed to match real-world MNC expectations
+
+* multiple environments (dev/qa/prod)
+* externalized credentials
+* `.env` integration
+
+---
+
+## 🧩 Design Principles
+
+* Separation of concerns
+* Reusable components
+* Scalable architecture
+* Thread-safe execution
+* Maintainable test design
+
+---
+
+## ⭐ Why This Framework Stands Out
+
+* AI-powered auto-healing 🔥
+* Hybrid UI + API testing
+* CI/CD + Docker ready
+* Designed for real-world scalability
+
+👉 Built with **SDET / QA Architect mindset**
