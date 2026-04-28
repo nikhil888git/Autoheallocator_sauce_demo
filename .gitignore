@@ -1,81 +1,109 @@
 # ==============================
-# 🔹 Maven Build
+# 🔹 BASE LOG DIRECTORY
 # ==============================
-/target/
-pom.xml.tag
-pom.xml.releaseBackup
-pom.xml.versionsBackup
-pom.xml.next
-release.properties
+
+# Ignore everything inside logs
+logs/**
+
+# Keep folder structure
+!logs/.gitkeep
+
 
 # ==============================
-# 🔹 Logs
+# 🔹 RUNTIME EXECUTION LOGS (IGNORE)
 # ==============================
+
+logs/runtime/
+logs/api/
+logs/playwright/
+
 *.log
-logs/
+*.out
+
 
 # ==============================
-# 🔹 Test Reports
-# ==============================
-/test-output/
-/allure-results/
-/allure-report/
-/extent-reports/
-
-# ==============================
-# 🔹 Screenshots / Videos
-# ==============================
-/screenshots/
-/videos/
-/traces/
-
-# ==============================
-# 🔹 IDE Files
+# 🔹 CI/CD EXECUTION LOGS (STRUCTURED)
 # ==============================
 
-## IntelliJ
-.idea/
-*.iml
+logs/ci/
 
-## Eclipse
-.project
-.classpath
-.settings/
+# Keep only critical CI failure logs
+!logs/ci/error.log
+!logs/ci/failure.log
+!logs/ci/critical.log
 
-## VS Code
-.vscode/
 
 # ==============================
-# 🔹 OS Files
+# 🔹 ERROR LOGS (PARTIAL TRACKING)
 # ==============================
-.DS_Store
-Thumbs.db
+
+logs/errors/
+
+# Allow only meaningful error logs
+!logs/errors/*.log
+!logs/errors/failure-summary.json
+
 
 # ==============================
-# 🔹 Environment & Secrets ⚠️
+# 🔹 AUDIT LOGS (ENTERPRISE TRACEABILITY)
 # ==============================
-.env
-*.env
-config.properties
-secrets.properties
+
+logs/audit/
+
+# Keep structured audit logs
+!logs/audit/*.json
+
 
 # ==============================
-# 🔹 Playwright Specific
+# 🔹 API LOGS (ISOLATED)
 # ==============================
-playwright/.cache/
+
+http-logs/
+api-logs/
+wiremock-logs/
+
+
+# ==============================
+# 🔹 PLAYWRIGHT EXECUTION LOGS
+# ==============================
+
 playwright-report/
+test-results/
 blob-report/
 
+
 # ==============================
-# 🔹 Temporary Files
+# 🔹 AI AUTO-HEAL LOGGING (USP)
 # ==============================
+
+tmp-autoheal/
+ai-cache/
+
+logs/ai-heal/
+
+# Keep only decision summary
+!logs/ai-heal/healing-summary.json
+
+
+# ==============================
+# 🔹 REPORTING FRAMEWORKS
+# ==============================
+
+allure-results/
+allure-report/
+extent-reports/
+test-output/
+surefire-reports/
+failsafe-reports/
+
+
+# ==============================
+# 🔹 TEMP FILES
+# ==============================
+
 *.tmp
 *.swp
 *.bak
-
-# ==============================
-# 🔹 Node (if hybrid project)
-# ==============================
-node_modules/
-package-lock.json
-yarn.lock
+*.old
+*.orig
+*~
