@@ -245,4 +245,4 @@ This framework is designed to:
 * Scale across teams and environments
 * Enable intelligent automation using AI
 
-👉 Built with **5+ years SDET / Architect mindset**
+
