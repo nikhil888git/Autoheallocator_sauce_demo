@@ -49,16 +49,23 @@ public class BaseTest {
         Allure.addAttachment("Healing Report", "text/plain", new ByteArrayInputStream(healingInfo.getBytes()), ".txt");
 
         if (!result.isSuccess() && page != null) {
-            byte[] screenshot = page.screenshot(new Page.ScreenshotOptions().setFullPage(true));
-            Allure.addAttachment("Failure Screenshot", "image/png", new ByteArrayInputStream(screenshot), ".png");
+            Page activePage = page;
+            if (context != null) {
+                java.util.List<Page> openPages = context.pages();
+                if (!openPages.isEmpty()) {
+                    activePage = openPages.get(openPages.size() - 1);
+                }
+            }
+
+            com.demo.utils.reporting.TestEvidenceManager.captureFailureEvidence(activePage, result.getMethod().getMethodName(), result.getThrowable());
 
             try {
                 String traceName = result.getMethod().getMethodName() + "_trace.zip";
-                Path tracePath = Paths.get("target/traces/" + traceName);
+                Path tracePath = Paths.get("target/playwright-traces/" + traceName);
+                Files.createDirectories(tracePath.getParent());
                 context.tracing().stopChunk(new com.microsoft.playwright.Tracing.StopChunkOptions().setPath(tracePath));
-                Allure.addAttachment("Trace Viewer Archive", "application/zip", new ByteArrayInputStream(Files.readAllBytes(tracePath)), ".zip");
             } catch (Exception e) {
-                e.printStackTrace();
+                System.err.println("Could not extract trace zip: " + e.getMessage());
             }
         } else if (context != null) {
             context.tracing().stopChunk(); // Drop the trace chunk

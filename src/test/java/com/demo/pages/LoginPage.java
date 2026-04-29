@@ -24,7 +24,7 @@ public class LoginPage {
 
     private com.microsoft.playwright.Locator getLoginBtnLocator() {
 
-        return smart.find("[data-test='login-button']", "input[type='submit']");
+        return smart.find("id='login-button'", "[data-test='login-button']", "input[type='submit']");
     }
 
     // private com.microsoft.playwright.Locator getLogoLocator() {

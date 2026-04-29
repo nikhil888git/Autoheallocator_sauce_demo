@@ -25,9 +25,10 @@ public class PlaywrightFactory {
         return tlPage.get();
     }
 
-    public Page initBrowser(String browserName) {
+    public static void initGlobalBrowser(String browserName) {
+        if (tlPlaywright.get() != null) return;
         try {
-            System.out.println("Browser context initialized: " + browserName);
+            System.out.println("Global Browser instance initialized: " + browserName);
             tlPlaywright.set(Playwright.create());
 
             BrowserType.LaunchOptions options = new BrowserType.LaunchOptions().setHeadless(false);
@@ -47,7 +48,15 @@ public class PlaywrightFactory {
                     tlBrowser.set(getPlaywright().chromium().launch(options));
                     break;
             }
+            System.out.println("Browser successfully launched in background Singleton");
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to initialize browser: " + browserName);
+        }
+    }
 
+    public Page initContext() {
+        try {
             tlContext.set(getBrowser().newContext());
 
             tlContext.get().tracing().start(new Tracing.StartOptions()
@@ -56,16 +65,14 @@ public class PlaywrightFactory {
                     .setSources(true));
 
             tlPage.set(getContext().newPage());
-            System.out.println("Browser launched");
             return getPage();
-
         } catch (Exception e) {
             e.printStackTrace();
-            throw new RuntimeException("Failed to initialize browser: " + browserName);
+            throw new RuntimeException("Failed to initialize browser Scenario context");
         }
     }
 
-    public void closeBrowser() {
+    public void closeContext() {
         try {
             if (getPage() != null) {
                 getPage().close();
@@ -75,6 +82,13 @@ public class PlaywrightFactory {
                 getContext().close();
                 tlContext.remove();
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void closeGlobalBrowser() {
+        try {
             if (getBrowser() != null) {
                 getBrowser().close();
                 tlBrowser.remove();

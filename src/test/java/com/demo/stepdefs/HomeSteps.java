@@ -99,4 +99,23 @@ public class HomeSteps {
         String cartCount = getHomePage().getCartItemCount();
         assertEquals(cartCount, expectedCount, "Cart badge count is incorrect.");
     }
+
+    @Then("user should verify social media links")
+    public void verify_social_links() {
+
+        // LinkedIn
+        Page linkedin = getHomePage().openLinkedIn();
+        linkedin.waitForLoadState();
+        assertThat(linkedin).hasURL("https://www.linkedin.com/company/sauce-labs/");
+
+        // Facebook
+        Page facebook = getHomePage().openFacebook();
+        facebook.waitForLoadState();
+        assertThat(facebook).hasURL("https://www.facebook.com/saucelabs");
+
+        // Twitter
+        Page twitter = getHomePage().openTwitter();
+        twitter.waitForLoadState();
+        assertThat(twitter).hasURL("https://twitter.com/saucelabs");
+    }
 }

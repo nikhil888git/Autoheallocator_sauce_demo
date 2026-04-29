@@ -20,3 +20,6 @@ Feature: Home Page Verifications
   Scenario: Verify adding all products to cart
     When the user adds all products to the cart
     Then the cart badge count should be displayed as "6"
+
+  Scenario: Verify social media links
+  Then user should verify social media links

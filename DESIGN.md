@@ -119,34 +119,34 @@ userService.loginUser()
 
 ---
 
-### 6️⃣ AI Auto-Heal Engine (USP 🔥)
+### 6️⃣ AI Auto-Heal Engine (v2.0 Architecture 🔥)
 
-Handles broken locators intelligently.
+Handles broken locators intelligently using deterministic arbitration and AI inference.
 
 #### Flow:
-
 ```
 Step Execution
      ↓
-Try Original Locator
-     ↓ (fail)
-Apply Heuristics
-     ↓ (fail)
-Check Cached Locator
-     ↓ (fail)
-Call LLM (OpenAI/Gemini)
+Primary Locator Extractor
+     ↓ (Timeout/Fail)
+AutoHealManager (Interception & Deduplication spam-lock)
+     ↓ (Cache Miss)
+DecisionEngine (Checks MAX_HEAL_ATTEMPTS bounds)
+     ↓ 
+HeuristicFallbackEngine (Structural parsing)
+     ↓ (Heuristics fail)
+AIHealingHook (Injects minimal memory-safe .innerHTML to LLM via Configuration Properties)
      ↓
-Store Working Locator
+ExecutionJson schema built (ISO 29119 traceability)
      ↓
 Continue Execution
 ```
 
-#### Components:
-
-* `engine/` → orchestration
-* `heuristics/` → fallback strategies
-* `llm/` → AI integration
-* `cache/` → locator memory
+#### Core Components:
+* `AutoHealDecisionEngine` → Arbitration and caching loops.
+* `HeuristicFallbackEngine` → Fallback strategies evaluating node maps.
+* `AIHealingHook` → Gemini/OpenRouter API integration with V8 DOM safety wrappers.
+* `AutoHealCacheManager` → Memory nodes for persistent session learning (`ai_cache_master.json` & `heur_cache_master.json`).
 
 ---
 
@@ -189,13 +189,15 @@ Provides reusable infrastructure:
 
 ---
 
-## 📊 Reporting & Observability
+## 📊 Reporting & Observability (ISO 29119 Compliant)
 
-* Allure Reports
-* Extent Reports
-* Logs (structured)
-* Screenshots on failure
-* AI healing logs
+* **Allure Reports**: Natively integrated across Cucumber and TestNG hooks.
+* **TestEvidenceManager**: Stateless, zero-IO utility capturing natively into memory:
+  - Playwright Visual Output (Focused strictly on active popups/windows)
+  - URL Native routing addresses
+  - Synchronized exception traces
+* **Playwright Native Tracing**: Zips cleanly export to `target/playwright-traces/` uniquely upon test failure to avoid disk bloat.
+* **Execution Trace**: Real-time ISO standard logging mapping strategy and AI confidence scores directly to runtime outputs.
 
 ---
 

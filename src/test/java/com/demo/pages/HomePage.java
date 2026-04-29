@@ -55,6 +55,19 @@ public class HomePage {
     // public Locator getLogo() {
     // return logo;
     // }
+    /* ================= SOCIAL LINKS ================= */
+
+    public Locator linkedinLink() {
+        return smart.find("[data-test='social-linkein']", "a[href*='linkedin']");
+    }
+
+    public Locator facebookLink() {
+        return smart.find("[data-test='social-facebok']", "a[href*='facebook']");
+    }
+
+    public Locator twitterLink() {
+        return smart.find("[data-test='social-twiter'], a[href*='twitter']");
+    }
 
     public Locator getHamburgerMenu() {
         return hamburgerMenu;
@@ -108,5 +121,17 @@ public class HomePage {
 
     public String getCartItemCount() {
         return cartBadge.textContent();
+    }
+
+    public Page openLinkedIn() {
+        return page.waitForPopup(() -> linkedinLink().click());
+    }
+
+    public Page openFacebook() {
+        return page.waitForPopup(() -> facebookLink().click());
+    }
+
+    public Page openTwitter() {
+        return page.waitForPopup(() -> twitterLink().click());
     }
 }

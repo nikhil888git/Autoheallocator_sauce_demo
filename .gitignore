@@ -1,4 +1,12 @@
 # ==============================
+# 🔹 MAVEN CORE DIRECTORIES (CRITICAL)
+# ==============================
+target/
+.idea/
+*.iml
+.vscode/
+
+# ==============================
 # 🔹 BASE LOG DIRECTORY
 # ==============================
 
@@ -78,6 +86,8 @@ blob-report/
 
 tmp-autoheal/
 ai-cache/
+*_cache_master.json
+autoheal-cache.json
 
 logs/ai-heal/
 
@@ -91,6 +101,7 @@ logs/ai-heal/
 
 allure-results/
 allure-report/
+.allure/
 extent-reports/
 test-output/
 surefire-reports/

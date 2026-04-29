@@ -13,7 +13,7 @@ public class SmartLocator {
         this.autoHealManager = new AutoHealManager(page);
     }
 
-    public Locator find(String primary, String fallback) {
-        return autoHealManager.getLocator(primary, fallback);
+    public Locator find(String primary, String... fallbacks) {
+        return autoHealManager.getLocator(primary, fallbacks);
     }
 }

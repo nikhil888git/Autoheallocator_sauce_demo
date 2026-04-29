@@ -15,17 +15,26 @@ public class Hooks {
         return PlaywrightFactory.getPage();
     }
 
-    @Before
-    public void setUp() {
-        HealingTracker.reset(); // reset per test
-
+    @BeforeAll
+    public static void setupGlobal() {
         String browserName = ConfigReader.get("browser");
         if (browserName == null || browserName.isEmpty()) {
             browserName = "chromium";
         }
+        PlaywrightFactory.initGlobalBrowser(browserName);
+    }
+
+    @AfterAll
+    public static void tearDownGlobal() {
+        PlaywrightFactory.closeGlobalBrowser();
+    }
+
+    @Before
+    public void setUp() {
+        HealingTracker.reset(); // reset per test
 
         factory = new PlaywrightFactory();
-        page = factory.initBrowser(browserName);
+        page = factory.initContext();
     }
 
     @After
@@ -44,28 +53,36 @@ public class Hooks {
         }
 
         if (scenario.isFailed() && page != null) {
-            byte[] screenshot = page.screenshot(
-                    new Page.ScreenshotOptions().setFullPage(true));
-            scenario.attach(screenshot, "image/png", "Failure Screenshot");
+            // Target the most recently opened page (e.g., failed popups) to ensure accurate screenshots
+            Page activePage = page;
+            if (PlaywrightFactory.getContext() != null) {
+                java.util.List<Page> openPages = PlaywrightFactory.getContext().pages();
+                if (!openPages.isEmpty()) {
+                    activePage = openPages.get(openPages.size() - 1);
+                }
+            }
+
+            // Centralized Stateless Evidence Call
+            com.demo.utils.reporting.TestEvidenceManager.captureFailureEvidence(activePage, scenario.getName(), null);
             
-            // Save and attach trace
-            try {
-                String traceName = scenario.getName().replaceAll("[^a-zA-Z0-9.-]", "_") + "_trace.zip";
-                java.nio.file.Path tracePath = java.nio.file.Paths.get("target/traces/" + traceName);
-                PlaywrightFactory.getContext().tracing().stop(new Tracing.StopOptions().setPath(tracePath));
-                
-                // Directly feed to Allure for Trace Viewer compatibility
-                io.qameta.allure.Allure.addAttachment("Playwright Trace Viewer Archive", "application/zip", new java.io.FileInputStream(tracePath.toFile()), ".zip");
-            } catch (Exception e) {
-                e.printStackTrace();
+            // Save Playwright trace ONLY for failure (Native API, no Allure IO duplicate)
+            if (PlaywrightFactory.getContext() != null) {
+                try {
+                    String traceName = scenario.getName().replaceAll("[^a-zA-Z0-9.-]", "_") + "_trace.zip";
+                    java.nio.file.Path tracePath = java.nio.file.Paths.get("target/playwright-traces/" + traceName);
+                    java.nio.file.Files.createDirectories(tracePath.getParent());
+                    PlaywrightFactory.getContext().tracing().stop(new Tracing.StopOptions().setPath(tracePath));
+                } catch (Exception e) {
+                    System.err.println("Could not extract trace zip: " + e.getMessage());
+                }
             }
         } else if (PlaywrightFactory.getContext() != null) {
-            // Drop trace if passed
+            // Discard memory buffer instantly (zero disk writing)
             PlaywrightFactory.getContext().tracing().stop();
         }
 
         if (factory != null) {
-            factory.closeBrowser();
+            factory.closeContext();
         }
     }
 }

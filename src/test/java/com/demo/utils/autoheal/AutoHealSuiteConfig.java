@@ -39,4 +39,8 @@ public class AutoHealSuiteConfig {
     public static int getMaxRetries() {
         return Integer.parseInt(properties.getProperty("autoheal.maxRetries", "1"));
     }
+
+    public static double getConfidenceThreshold() {
+        return Double.parseDouble(properties.getProperty("autoheal.ai.confidenceThreshold", "0.8"));
+    }
 }
