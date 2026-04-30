@@ -1,7 +1,7 @@
 
 Feature: Login Test
 
-@smoke @login @P1
+@REQ-LOGIN-001 @smoke @login @P1
 Scenario Outline: Verify user can login with valid credentials "<username>"
   Given user launches browser
   When user opens login page
@@ -13,13 +13,13 @@ Examples:
   | standard_user | secret_sauce |
   | problem_user  | secret_sauce |
 
-@medium @ui
+@REQ-LOGIN-002 @medium @ui
 Scenario: Verify login page is displayed
   Given user launches browser
   When user opens login page
   Then login form should be visible
 
-  @negative @login @P2
+ @REQ-LOGIN-003 @negative @login @P2
 Scenario Outline: Verify user cannot login with invalid credentials
   Given user launches browser
   When user opens login page

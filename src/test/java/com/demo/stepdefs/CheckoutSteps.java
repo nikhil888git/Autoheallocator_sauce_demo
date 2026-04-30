@@ -39,4 +39,15 @@ public class CheckoutSteps {
         checkoutPage.completeCheckout();
         assertThat(checkoutPage.successMessage()).isVisible();
     }
+
+    @When("user enters checkout details {string} {string} {string}")
+    public void enter_checkout_details(String firstName, String lastName, String postalCode) {
+        checkoutPage.enterDetails(firstName, lastName, postalCode);
+    }
+
+    @Then("user should not be able to complete the order")
+    public void verify_order_failure() {
+        checkoutPage.clickContinue();
+        assertThat(checkoutPage.errorMessage()).isVisible();
+    }
 }

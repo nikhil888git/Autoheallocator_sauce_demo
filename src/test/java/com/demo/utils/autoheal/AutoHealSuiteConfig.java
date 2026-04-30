@@ -25,6 +25,10 @@ public class AutoHealSuiteConfig {
     }
 
     public static String getApiKey() {
+        String envKey = com.demo.utils.ConfigReader.get("API_KEY");
+        if (envKey != null && !envKey.trim().isEmpty()) {
+            return envKey;
+        }
         return properties.getProperty("autoheal.ai.apiKey", "");
     }
 

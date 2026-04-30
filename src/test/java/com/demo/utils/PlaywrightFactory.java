@@ -57,6 +57,10 @@ public class PlaywrightFactory {
 
     public Page initContext() {
         try {
+            if (getBrowser() == null) {
+                String browserName = com.demo.utils.ConfigReader.get("browser");
+                initGlobalBrowser(browserName != null && !browserName.isEmpty() ? browserName : "chromium");
+            }
             tlContext.set(getBrowser().newContext());
 
             tlContext.get().tracing().start(new Tracing.StartOptions()

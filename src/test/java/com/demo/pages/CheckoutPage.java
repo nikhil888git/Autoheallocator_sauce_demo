@@ -59,6 +59,10 @@ public class CheckoutPage {
         return smart.find("text=Thank you for your order");
     }
 
+    private Locator errorMessageLocator() {
+        return smart.find("[data-test='error']");
+    }
+
     /* ================= ACTIONS ================= */
 
     public void addProductToCart() {
@@ -84,6 +88,10 @@ public class CheckoutPage {
         finishBtn().click();
     }
 
+    public void clickContinue() {
+        continueBtn().click();
+    }
+
     /* ================= VALIDATIONS ================= */
 
     /**
@@ -93,5 +101,9 @@ public class CheckoutPage {
      */
     public Locator successMessage() {
         return successMessageLocator();
+    }
+
+    public Locator errorMessage() {
+        return errorMessageLocator();
     }
 }

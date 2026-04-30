@@ -118,3 +118,4 @@ failsafe-reports/
 *.old
 *.orig
 *~
+.env
