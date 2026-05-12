@@ -10,22 +10,28 @@ import java.util.regex.Pattern;
 
 import io.cucumber.java.en.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class LoginSteps {
 
+    private static final Logger logger = LoggerFactory.getLogger(LoginSteps.class);
     LoginPage loginPage = new LoginPage(Hooks.getPage());
 
     @Given("user launches browser")
     public void launch_browser() {
-        System.out.println("Browser launched");
+        logger.info("Browser launched and initialized successfully");
     }
 
     @When("user opens login page")
     public void open_login_page() {
+        logger.debug("Navigating to login page");
         loginPage.open();
     }
 
     @When("user logs in with {string} and {string}")
     public void login(String username, String password) {
+        logger.info("Attempting login with username: {}", username);
         loginPage.login(username, password);
     }
 
@@ -39,8 +45,7 @@ public class LoginSteps {
         assertThat(Hooks.getPage())
                 .hasURL(Pattern.compile(".*inventory.html"));
 
-        System.out.println(
-                "User landed on Home Page: " + Hooks.getPage().url());
+        logger.info("User successfully landed on Home Page");
     }
 
     @Then("user should not be redirected to inventory page")
@@ -53,7 +58,7 @@ public class LoginSteps {
         assertThat(loginPage.loginButton())
                 .isVisible();
 
-        System.out.println("User remained on login page");
+        logger.info("User remained on login page as expected");
     }
 
     @Then("user should see login error message")
@@ -65,6 +70,12 @@ public class LoginSteps {
         assertThat(loginPage.errorMessage())
                 .containsText("Username and password do not match");
 
-        System.out.println("Login error displayed successfully");
+        logger.info("Login error displayed successfully");
+    }
+
+    @Then("login form should be visible")
+    public void login_form_should_be_visible() {
+        logger.debug("Verifying login form visibility");
+        assertThat(loginPage.loginButton()).isVisible();
     }
 }

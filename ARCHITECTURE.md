@@ -28,6 +28,16 @@ Playwright-bdd-asl/
 └── .env                 # Local Environment Secrets (Git-ignored)
 ```
 
+## Logging Architecture & Traceability
+To comply with ISO/IEC 29119 standards for test documentation and traceability, the framework utilizes a robust, leveled logging strategy aligned with MNC best practices via **Logback** and **SLF4J**:
+- **Log Routing**: Logs are actively split into isolated files (`automation.log`, `failures.log`, `telemetry.log`, `api.log`) without code-level intervention.
+- **MDC (Mapped Diagnostic Context)**: Ensures 100% thread-safe parallel execution logging. Every log entry inherently captures `[Thread]`, `[TraceId]`, `[Test]`, `[Env]`, and `[Browser]`.
+- **INFO**: For business-level actions and scenario progress.
+- **DEBUG**: For detailed technical operations (DOM interaction, JSON payloads).
+- **WARN**: For auto-healing events, retry mechanisms, and non-fatal anomalies.
+- **ERROR**: For assertion failures, timeouts, and unrecoverable exceptions.
+Logs are piped dynamically to both standard output (console) and persistent test evidence artifacts (Allure/JSON).
+
 ## Page Object Model (POM) Structure
 We enforce strict encapsulation of UI locators and actions. 
 - **No Assertions in Pages**: Assertions belong in the step definitions.

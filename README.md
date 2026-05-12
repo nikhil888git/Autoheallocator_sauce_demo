@@ -147,6 +147,14 @@ Our robust, multi-tiered self-healing engine guarantees execution continuity:
 - **ISO-Trace JSON**: ISO 29119 compliant execution evidence output.
 - **Playwright Trace Viewer**: In-depth DOM/Network traces dynamically attached upon failure.
 
+## 📝 Logging Standards (ISO 29119 Compliant)
+We enforce MNC-level logging best practices to ensure high traceability and debugging efficiency:
+- **DEBUG**: Fine-grained diagnostic information (e.g., locator paths, AI inference scores).
+- **INFO**: High-level test execution milestones (e.g., scenario start, successful login).
+- **WARN**: Recoverable anomalies (e.g., heuristic fallback triggered, network retries).
+- **ERROR**: Hard failures and exceptions (e.g., test failures, missing environment variables).
+All logs are structured and injected directly into Allure and ISO-Trace reports.
+
 ## 🔐 Configuration Management
 Powered by `ConfigReader.java` utilizing a strict **Single Source of Truth**:
 - Supports multiple environments dynamically (`QA_BASE_URL`, `UAT_BASE_URL`).

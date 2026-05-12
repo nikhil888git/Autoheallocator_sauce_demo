@@ -24,3 +24,12 @@
 - **DO NOT** place business logic inside Step Definitions.
 - **DO NOT** hardcode credentials or URLs anywhere in the codebase.
 - **DO NOT** commit the `.env` file to the repository.
+
+### Logging Best Practices (ISO 29119 Standards)
+Follow MNC-level logging standards via SLF4J to ensure high traceability:
+- **Do not manually log thread IDs or Scenario names**. This is handled globally by MDC in `Hooks.java`. Just write `logger.info("Executing login")`.
+- **INFO**: Log business-level actions (e.g., `logger.info("User navigated to the checkout page");`).
+- **DEBUG**: Log diagnostic data (e.g., locator paths, API payloads).
+- **WARN**: Log non-fatal anomalies or fallback triggers (e.g., `logger.warn("Primary locator failed, engaging AI Auto-Heal");`).
+- **ERROR**: Log stack traces and critical failures before throwing exceptions.
+- **NEVER** use `System.out.println()`. Always use the integrated logger.

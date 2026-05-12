@@ -56,6 +56,14 @@ If you are an AI assistant iterating on this project, adhere strictly to the fol
 2. **Stateless Evidence Reporting**: When handling exceptions or native failures (`ITestResult`/`Scenario.isFailed()`), invoke `TestEvidenceManager.captureFailureEvidence(...)` to parse trace logs, URLs, JVM stack traces, and localized view-buffers entirely in-memory natively mapped into Allure byte-streams. Do not persist `.zip` archives or manual logs on `java.io.Files` paths avoiding I/O bottleneck freezes natively. Always attempt to point capturing interfaces to active internal browser windows (like Popups).
 3. **Smart Element Binding**: Leverage `.find()` mappings uniformly onto the `SmartLocator` wrapper object rather than standard deep `.locator()` trees so the arbitration loop can safely trigger fallback endpoints.
 4. **Isolate Component Packages**: Always decouple schema data logic from execution bindings within `com.demo.utils.autoheal`. Avoid pushing raw System interactions to Page Objects directly.
+5. **MNC-Level Logging & ISO 29119 Traceability**: Maintain strict logging levels when building AI/Heuristic integrations using integrated Logback/SLF4J bindings:
+   - **MDC Thread Context**: Always rely on the framework's MDC injection. Do not manually format `[Thread]` or `[Scenario]` inside AI execution strings.
+   - **Log File Routing**: Note that `com.demo.utils.autoheal` packages are natively routed into `target/logs/telemetry.log`.
+   - **DEBUG**: Raw AI prompts, token usage, JSON schemas, and DOM node maps.
+   - **INFO**: Auto-healing initialization and successful resolution states.
+   - **WARN**: Heuristic exhaustion, cache misses, or low-confidence AI scores.
+   - **ERROR**: AI API timeouts, malformed LLM responses, and absolute locator failures.
+   Never use standard system out; pipe all events through the framework's core logging utility to ensure it binds to the ISO-Trace execution evidence.
 
 ## Native Test Artifacts
 - **Allure Viewers**: All native metrics bind safely inside `target/allure-results/`. Execute `mvn allure:serve` upon suite pipeline finishing gracefully to review UI execution layers.  

@@ -12,8 +12,12 @@ import java.util.List;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 import static org.testng.Assert.assertEquals;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class HomeSteps {
+
+    private static final Logger logger = LoggerFactory.getLogger(HomeSteps.class);
 
     private Page getPage() {
         return Hooks.getPage();
@@ -25,6 +29,7 @@ public class HomeSteps {
 
     @Given("the user is logged into the application")
     public void the_user_is_logged_into_the_application() {
+        logger.info("Setting up user session (Login)");
 
         Page page = Hooks.getPage();
         com.demo.pages.LoginPage loginPage = new com.demo.pages.LoginPage(page);
@@ -43,6 +48,7 @@ public class HomeSteps {
 
     @Then("the user should see the {string} displayed on the home page")
     public void the_user_should_see_component(String component) {
+        logger.debug("Verifying visibility of component: {}", component);
         switch (component.toLowerCase()) {
             case "hamburger menu":
                 assertThat(getHomePage().getHamburgerMenu()).isVisible();
@@ -60,12 +66,13 @@ public class HomeSteps {
 
     @Then("the user should see {int} products")
     public void the_user_should_see_products(int expectedCount) {
+        logger.debug("Verifying product count is exactly {}", expectedCount);
         assertEquals(getHomePage().getProductCount(), expectedCount);
     }
 
     @Then("each product should have a name, image, price, and add to cart button")
     public void each_product_should_have_details() {
-
+        logger.info("Verifying all product details (name, image, price, button)");
         HomePage home = getHomePage();
 
         int totalProducts = home.getProductCount();
@@ -92,6 +99,7 @@ public class HomeSteps {
 
     @Then("the product prices should contain {string}")
     public void product_prices_should_contain(String symbol) {
+        logger.debug("Verifying all product prices contain currency symbol: {}", symbol);
         for (Locator price : getHomePage().getAllProductPrices()) {
             assertThat(price).isVisible();
             assertThat(price).containsText(symbol);
@@ -100,32 +108,26 @@ public class HomeSteps {
 
     @When("the user adds all products to the cart")
     public void user_adds_all_products() {
+        logger.info("Adding all available products to the cart");
         getHomePage().addAllProductsToCart();
     }
 
     // 🔥 FIX 2: SAFE ASSERTION
     @Then("the cart badge count should be displayed as {string}")
     public void cart_badge_count_matches(String expectedCount) {
+        logger.debug("Verifying cart badge count matches: {}", expectedCount);
         String actual = getHomePage().getCartItemCount();
         assertEquals(actual, expectedCount);
     }
 
     @Then("user should verify social media links")
     public void verify_social_links() {
+        logger.info("Verifying social media href links without external navigation");
+        HomePage home = getHomePage();
 
-        // LinkedIn
-        Page linkedin = getHomePage().openLinkedIn();
-        linkedin.waitForLoadState();
-        assertThat(linkedin).hasURL("https://www.linkedin.com/company/sauce-labs/");
-
-        // Facebook
-        Page facebook = getHomePage().openFacebook();
-        facebook.waitForLoadState();
-        assertThat(facebook).hasURL("https://www.facebook.com/saucelabs");
-
-        // Twitter
-        Page twitter = getHomePage().openTwitter();
-        twitter.waitForLoadState();
-        assertThat(twitter).hasURL("https://twitter.com/saucelabs");
+        // Check href directly to avoid 3rd party availability/bot-blocker flakiness (MNC standard)
+        assertThat(home.linkedinLink()).hasAttribute("href", "https://www.linkedin.com/company/sauce-labs/");
+        assertThat(home.facebookLink()).hasAttribute("href", "https://www.facebook.com/saucelabs");
+        assertThat(home.twitterLink()).hasAttribute("href", "https://twitter.com/saucelabs");
     }
 }

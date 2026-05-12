@@ -198,6 +198,13 @@ Provides reusable infrastructure:
   - Synchronized exception traces
 * **Playwright Native Tracing**: Zips cleanly export to `target/playwright-traces/` uniquely upon test failure to avoid disk bloat.
 * **Execution Trace**: Real-time ISO standard logging mapping strategy and AI confidence scores directly to runtime outputs.
+* **ISO 29119 Logging Standards**: Strict adherence to MNC-level logging formats via **Logback**:
+  - **MDC Context**: TestNG parallel threads are safely isolated using MDC, auto-injecting `TraceId`, `Env`, and `Scenario` states globally.
+  - **Log Separation**: Execution logs are natively split into `automation.log`, `failures.log`, `api.log`, and `telemetry.log`.
+  - **INFO**: Business flow milestones and test steps.
+  - **DEBUG**: Granular AI payloads, DOM states, and API responses.
+  - **WARN**: Auto-healing interventions and transient timeouts.
+  - **ERROR**: Hard exceptions, unhealed locators, and test blockers.
 
 ---
 
