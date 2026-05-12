@@ -25,15 +25,20 @@ public class HomeSteps {
 
     @Given("the user is logged into the application")
     public void the_user_is_logged_into_the_application() {
-        Page page = getPage();
-        if (page.url().equals("about:blank") || !page.url().contains("inventory.html")) {
-            String baseUrl = ConfigReader.getBaseUrl();
-            page.navigate(baseUrl + "/");
-            page.locator("#user-name").fill(ConfigReader.get("TEST_USER"));
-            page.locator("#password").fill(ConfigReader.get("TEST_PASSWORD"));
-            page.locator("#login-button").click();
-            assertThat(page).hasURL(baseUrl + "/inventory.html");
-        }
+
+        Page page = Hooks.getPage();
+        com.demo.pages.LoginPage loginPage = new com.demo.pages.LoginPage(page);
+
+        // Always start from login page (no hidden conditions)
+        loginPage.open();
+
+        loginPage.login(
+                ConfigReader.get("TEST_USER"),
+                ConfigReader.get("TEST_PASSWORD"));
+
+        // Validate successful login via UI (NOT just URL)
+        HomePage homePage = new HomePage(page);
+        assertThat(homePage.getHamburgerMenu()).isVisible();
     }
 
     @Then("the user should see the {string} displayed on the home page")
@@ -55,17 +60,20 @@ public class HomeSteps {
 
     @Then("the user should see {int} products")
     public void the_user_should_see_products(int expectedCount) {
-        int totalProducts = getHomePage().getProductCount();
-        assertEquals(totalProducts, expectedCount, "Product count mismatch!");
+        assertEquals(getHomePage().getProductCount(), expectedCount);
     }
 
     @Then("each product should have a name, image, price, and add to cart button")
     public void each_product_should_have_details() {
-        int totalProducts = getHomePage().getProductCount();
-        List<Locator> productNames = getHomePage().getAllProductNames();
-        List<Locator> productImages = getHomePage().getAllProductImages();
-        List<Locator> productPrices = getHomePage().getAllProductPrices();
-        List<Locator> addToCartButtons = getHomePage().getAllAddToCartButtons();
+
+        HomePage home = getHomePage();
+
+        int totalProducts = home.getProductCount();
+
+        List<Locator> productNames = home.getAllProductNames();
+        List<Locator> productImages = home.getAllProductImages();
+        List<Locator> productPrices = home.getAllProductPrices();
+        List<Locator> addToCartButtons = home.getAllAddToCartButtons();
 
         assertEquals(productNames.size(), totalProducts);
         assertEquals(productImages.size(), totalProducts);
@@ -76,6 +84,7 @@ public class HomeSteps {
             assertThat(btn).isVisible();
             assertThat(btn).hasText("Add to cart");
         }
+
         for (Locator img : productImages) {
             assertThat(img).isVisible();
         }
@@ -94,10 +103,11 @@ public class HomeSteps {
         getHomePage().addAllProductsToCart();
     }
 
+    // 🔥 FIX 2: SAFE ASSERTION
     @Then("the cart badge count should be displayed as {string}")
     public void cart_badge_count_matches(String expectedCount) {
-        String cartCount = getHomePage().getCartItemCount();
-        assertEquals(cartCount, expectedCount, "Cart badge count is incorrect.");
+        String actual = getHomePage().getCartItemCount();
+        assertEquals(actual, expectedCount);
     }
 
     @Then("user should verify social media links")

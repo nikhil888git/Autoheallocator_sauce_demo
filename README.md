@@ -1,221 +1,165 @@
-# 🚀 Playwright BDD Automation Framework with AI Auto-Heal
-
----
+# Playwright BDD Automation Framework with AI Auto-Heal
 
 ## 📌 Overview
+This project is a modern, enterprise-grade test automation framework built using:
 
-This project is a **modern, enterprise-grade automation framework** built using:
+- **Playwright (Java)** – Fast and reliable browser automation
+- **Cucumber BDD** – Business-readable test scenarios
+- **TestNG** – Parallel execution and orchestration
 
-* **Playwright (Java)** – fast and reliable browser automation
-* **Cucumber BDD** – business-readable test scenarios
-* **TestNG** – parallel execution and orchestration
-
-👉 The framework integrates an **AI-powered Auto-Heal engine** that intelligently recovers broken locators using LLMs such as:
-
-* Google Gemini
-* OpenAI
-* DeepSeek
+👉 **The Unique Selling Proposition (USP):**
+The framework integrates an **AI-powered Auto-Heal engine** that intelligently recovers broken locators using advanced LLMs such as:
+- Google Gemini
+- OpenAI
+- DeepSeek
 
 It follows a **heuristic-first → AI fallback strategy**, ensuring:
-
-* minimal test maintenance
-* reduced AI cost
-* faster execution
-
----
+- Minimal test maintenance
+- Reduced AI token costs
+- Significantly faster execution times
 
 ## 🧠 Key Features
-
-✔️ BDD-based automation (Gherkin scenarios)
-✔️ AI-powered self-healing locators 🔥
-✔️ Page Object Model (POM) architecture
-✔️ Parallel execution with TestNG
-✔️ Cross-browser support (Playwright)
-✔️ Heuristic + AI fallback strategy
-✔️ Scalable and modular framework design
-
----
+✔️ **BDD-based automation** (Clean Gherkin scenarios)  
+✔️ **AI-powered self-healing locators** 🔥  
+✔️ **Page Object Model (POM)** architecture  
+✔️ **Parallel execution** with TestNG (Thread-safe)  
+✔️ **Cross-browser support** via Playwright  
+✔️ **Heuristic + AI fallback strategy**  
+✔️ **Scalable and modular** enterprise design  
 
 ## 🏗️ Tech Stack
 
-| Layer          | Technology                 |
-| -------------- | -------------------------- |
-| Language       | Java 11                    |
-| Automation     | Playwright                 |
-| BDD            | Cucumber                   |
-| Test Runner    | TestNG                     |
-| API / AI Calls | REST Assured               |
-| AI Integration | Gemini / OpenAI / DeepSeek |
-| Reporting      | Allure / Extent            |
-
----
+| Layer | Technology |
+| :--- | :--- |
+| **Language** | Java 11+ |
+| **Automation** | Playwright for Java |
+| **BDD Framework** | Cucumber |
+| **Test Runner** | TestNG |
+| **API / AI Calls** | REST Assured / Native HTTP Client |
+| **AI Integration** | OpenAI / Gemini / DeepSeek |
+| **Reporting** | Allure & ISO-Trace (Execution Evidence) |
 
 ## 📂 Project Structure
-
-```id="p2h4k9"
+```text
 Playwright-bdd-asl/
 ├── pom.xml
 ├── src/
-│   ├── main/java/com/framework/
-│   │   ├── core/        # Driver, Base, Hooks
-│   │   ├── pages/       # Page Objects
-│   │   ├── utils/       # Wait, Config, Logger
-│   │   ├── ai/          # Auto-heal engine (USP)
-│   │   ├── api/         # REST Assured layer
-│   │   ├── models/      # POJOs
-│   │   └── listeners/   # TestNG listeners
+│   ├── main/java/com/demo/
+│   │   ├── hooks/       # Setup, teardown, tagged hooks
+│   │   ├── pages/       # Page Objects (POM)
+│   │   ├── utils/       # ConfigReader, CsvReader, PlaywrightFactory
+│   │   └── utils/autoheal/ # AI Auto-heal engine (USP)
 │
-│   ├── test/java/com/tests/
-│   │   ├── ui/
-│   │   ├── api/
-│   │   └── integration/
+│   ├── test/java/com/demo/stepdefs/
+│   │   ├── ui/          # UI-focused steps
+│   │   └── api/         # API-focused steps (Optional)
 │
 │   ├── test/resources/
-│   │   ├── testdata/
-│   │   ├── config/
-│   │   └── features/
+│   │   ├── testdata/    # CSV/JSON data-driven files
+│   │   ├── config.properties
+│   │   └── features/    # BDD Feature files
 │
-├── reports/
-├── logs/
-├── docker/
-├── .github/workflows/
+├── target/              # Reports, Traces, AI caches
+├── .github/workflows/   # CI/CD Pipelines
+└── .env                 # Local Environment Secrets (Git-ignored)
 ```
-
----
 
 ## ⚙️ Setup & Installation
 
-### Clone the repository
-
-```bash id="1w2x3y"
+**1. Clone the repository**
+```bash
 git clone <your-repo-url>
 cd Playwright-bdd-asl
 ```
 
-### Install dependencies
-
-```bash id="9x8y7z"
-mvn clean install
+**2. Configure Environment**
+Copy `.env.example` to `.env` and add your secure credentials.
+```properties
+ENV=QA
+TEST_USER=standard_user
+TEST_PASSWORD=secret_sauce
+API_KEY=sk-your-ai-api-key
 ```
 
-### Install Playwright browsers
-
-```bash id="3k8d2p"
-mvn exec:java -Dexec.mainClass=com.microsoft.playwright.CLI -Dexec.args="install"
+**3. Install dependencies**
+```bash
+mvn clean install -DskipTests
 ```
 
----
+**4. Install Playwright browsers**
+```bash
+mvn exec:java -e -Dexec.mainClass=com.microsoft.playwright.CLI -Dexec.args="install"
+```
 
 ## ▶️ Test Execution
 
-### Run all tests
-
-```bash id="8h3k2l"
-mvn test
+**Run all tests (Default):**
+```bash
+mvn clean test
 ```
 
-### Run with TestNG suite
-
-```bash id="0k2l3m"
+**Run with TestNG suite file:**
+```bash
 mvn test -DsuiteXmlFile=testng.xml
 ```
 
-### Run BDD scenarios
-
-```bash id="2j3h4k"
-mvn test -Dcucumber.options="src/test/resources/features"
+**Run specific BDD scenarios by tags:**
+```bash
+mvn test -Dcucumber.filter.tags="@smoke"
 ```
 
----
-
 ## ⚡ Parallel Execution
-
-* Enabled via **TestNG**
-* Thread-safe driver handling
-* Supports multi-browser execution
-
----
+- **Enabled via TestNG**: Utilizes `dataproviderthreadcount` in `maven-surefire-plugin`.
+- **Thread-safe driver handling**: Managed entirely via `ThreadLocal` in `PlaywrightFactory`.
+- **Cross-browser multi-threading**: Zero state contamination between parallel threads.
 
 ## 🐳 Docker Execution
-
-```bash id="9l8k7j"
+```bash
 docker build -t playwright-framework .
 docker run playwright-framework
 ```
 
----
-
 ## ⚙️ CI/CD Integration
+GitHub Actions pipeline automates the testing lifecycle:
+1. Build project
+2. Install Playwright browsers
+3. Execute parallel tests
+4. Generate Allure reports
+5. Upload ISO execution evidence and trace artifacts
 
-GitHub Actions pipeline:
-
-* Build project
-* Install Playwright browsers
-* Execute tests
-* Generate reports
-* Upload artifacts
-
-Location:
-
-```
-.github/workflows/ci.yml
-```
-
----
+*Location:* `.github/workflows/ci.yml`
 
 ## 🧠 AI Auto-Heal Strategy
+Our robust, multi-tiered self-healing engine guarantees execution continuity:
+1. **Try original locator** (Fastest)
+2. **Apply heuristic matching** (Regex / DOM tree structural checks)
+3. **Use cached fallback** (Zero-cost instantaneous fix)
+4. **Call LLM** (If required, dynamically patches the locator)
+5. **Store working locator** (Updates dual-cache for future runs)
 
-1. Try original locator
-2. Apply heuristic matching
-3. Use cached fallback
-4. Call LLM (if required)
-5. Store working locator
-
-👉 This reduces:
-
-* flaky failures
-* maintenance cost
-* locator breakage impact
-
----
+👉 **This radically reduces:**
+- Flaky test failures
+- Daily maintenance cost
+- Impact of major UI refactoring
 
 ## 📊 Reporting
+- **Allure Reports**: Rich visualization of BDD execution.
+- **ISO-Trace JSON**: ISO 29119 compliant execution evidence output.
+- **Playwright Trace Viewer**: In-depth DOM/Network traces dynamically attached upon failure.
 
-* Allure Reports
-* Extent Reports
-* Logs & screenshots on failure
-
----
-
-## 🔐 Configuration
-
-Config files located at:
-
-```
-src/test/resources/config/
-```
-
-Supports:
-
-* multiple environments (dev/qa/prod)
-* externalized credentials
-* `.env` integration
-
----
+## 🔐 Configuration Management
+Powered by `ConfigReader.java` utilizing a strict **Single Source of Truth**:
+- Supports multiple environments dynamically (`QA_BASE_URL`, `UAT_BASE_URL`).
+- `.env` strictly used for local secrets (preventing credentials in VCS).
+- `config.properties` strictly used for framework defaults.
 
 ## 🧩 Design Principles
-
-* Separation of concerns
-* Reusable components
-* Scalable architecture
-* Thread-safe execution
-* Maintainable test design
-
----
+- **Separation of Concerns**: UI, Step Definitions, and Data are 100% isolated.
+- **Reusable Components**: Utilities are heavily abstracted.
+- **Thread-safe Execution**: Designed for enterprise scaling.
 
 ## ⭐ Why This Framework Stands Out
-
-* AI-powered auto-healing 🔥
-* Hybrid UI + API testing
-* CI/CD + Docker ready
-* Designed for real-world scalability
+- **AI-powered Auto-Healing** 🔥
+- **Hybrid UI + Data-driven testing**
+- **Designed for real-world MNC scalability**
+- **Zero hardcoded waits** (Leverages Playwright auto-wait capabilities)

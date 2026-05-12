@@ -5,8 +5,12 @@ import com.demo.utils.PlaywrightFactory;
 import com.demo.utils.HealingTracker;
 import com.microsoft.playwright.*;
 import io.cucumber.java.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Hooks {
+
+    private static final Logger logger = LoggerFactory.getLogger(Hooks.class);
 
     private PlaywrightFactory factory;
     private Page page;
@@ -21,24 +25,37 @@ public class Hooks {
         if (browserName == null || browserName.isEmpty()) {
             browserName = "chromium";
         }
+        logger.info("[Global] Setting up global browser: {}", browserName);
         PlaywrightFactory.initGlobalBrowser(browserName);
     }
 
     @AfterAll
     public static void tearDownGlobal() {
+        logger.info("[Global] Tearing down global browser");
         PlaywrightFactory.closeGlobalBrowser();
     }
 
-    @Before
-    public void setUp() {
+    @Before(order = 1)
+    public void setUp(Scenario scenario) {
+        logger.info("[Thread {}] Starting scenario: {}", Thread.currentThread().getId(), scenario.getName());
         HealingTracker.reset(); // reset per test
 
         factory = new PlaywrightFactory();
         page = factory.initContext();
     }
 
+    @Before(value = "@login", order = 2)
+    public void login() {
+        logger.info("[Thread {}] Executing @login hook", Thread.currentThread().getId());
+        page.navigate(ConfigReader.getBaseUrl());
+        com.demo.pages.LoginPage loginPage = new com.demo.pages.LoginPage(page);
+        loginPage.login(ConfigReader.get("TEST_USER"), ConfigReader.get("TEST_PASSWORD"));
+    }
+
     @After
     public void tearDown(Scenario scenario) {
+        logger.info("[Thread {}] Tearing down scenario: {} | Status: {}", 
+            Thread.currentThread().getId(), scenario.getName(), scenario.getStatus());
 
         int healCount = HealingTracker.getHealCount();
 
@@ -53,6 +70,7 @@ public class Hooks {
         }
 
         if (scenario.isFailed() && page != null) {
+            logger.error("[Thread {}] Scenario Failed, capturing evidence", Thread.currentThread().getId());
             // Target the most recently opened page (e.g., failed popups) to ensure accurate screenshots
             Page activePage = page;
             if (PlaywrightFactory.getContext() != null) {
@@ -72,8 +90,9 @@ public class Hooks {
                     java.nio.file.Path tracePath = java.nio.file.Paths.get("target/playwright-traces/" + traceName);
                     java.nio.file.Files.createDirectories(tracePath.getParent());
                     PlaywrightFactory.getContext().tracing().stop(new Tracing.StopOptions().setPath(tracePath));
+                    logger.info("[Thread {}] Captured trace: {}", Thread.currentThread().getId(), tracePath.toString());
                 } catch (Exception e) {
-                    System.err.println("Could not extract trace zip: " + e.getMessage());
+                    logger.error("[Thread {}] Could not extract trace zip: {}", Thread.currentThread().getId(), e.getMessage());
                 }
             }
         } else if (PlaywrightFactory.getContext() != null) {

@@ -1,8 +1,12 @@
 package com.demo.utils;
 
 import com.microsoft.playwright.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class PlaywrightFactory {
+
+    private static final Logger logger = LoggerFactory.getLogger(PlaywrightFactory.class);
 
     private static ThreadLocal<Playwright> tlPlaywright = new ThreadLocal<>();
     private static ThreadLocal<Browser> tlBrowser = new ThreadLocal<>();
@@ -28,7 +32,7 @@ public class PlaywrightFactory {
     public static void initGlobalBrowser(String browserName) {
         if (tlPlaywright.get() != null) return;
         try {
-            System.out.println("Global Browser instance initialized: " + browserName);
+            logger.info("[Thread {}] Global Browser instance initialized: {}", Thread.currentThread().getId(), browserName);
             tlPlaywright.set(Playwright.create());
 
             BrowserType.LaunchOptions options = new BrowserType.LaunchOptions().setHeadless(false);
@@ -44,13 +48,13 @@ public class PlaywrightFactory {
                     tlBrowser.set(getPlaywright().webkit().launch(options));
                     break;
                 default:
-                    System.out.println("Invalid browser name: " + browserName + ". Defaulting to chromium.");
+                    logger.warn("[Thread {}] Invalid browser name: {}. Defaulting to chromium.", Thread.currentThread().getId(), browserName);
                     tlBrowser.set(getPlaywright().chromium().launch(options));
                     break;
             }
-            System.out.println("Browser successfully launched in background Singleton");
+            logger.info("[Thread {}] Browser successfully launched in background Singleton", Thread.currentThread().getId());
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("[Thread {}] Failed to initialize browser: {}", Thread.currentThread().getId(), browserName, e);
             throw new RuntimeException("Failed to initialize browser: " + browserName);
         }
     }
@@ -61,6 +65,7 @@ public class PlaywrightFactory {
                 String browserName = com.demo.utils.ConfigReader.get("browser");
                 initGlobalBrowser(browserName != null && !browserName.isEmpty() ? browserName : "chromium");
             }
+            logger.info("[Thread {}] Initializing new BrowserContext and Page", Thread.currentThread().getId());
             tlContext.set(getBrowser().newContext());
 
             tlContext.get().tracing().start(new Tracing.StartOptions()
@@ -71,13 +76,14 @@ public class PlaywrightFactory {
             tlPage.set(getContext().newPage());
             return getPage();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("[Thread {}] Failed to initialize browser Scenario context", Thread.currentThread().getId(), e);
             throw new RuntimeException("Failed to initialize browser Scenario context");
         }
     }
 
     public void closeContext() {
         try {
+            logger.info("[Thread {}] Closing BrowserContext and Page", Thread.currentThread().getId());
             if (getPage() != null) {
                 getPage().close();
                 tlPage.remove();
@@ -87,12 +93,13 @@ public class PlaywrightFactory {
                 tlContext.remove();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("[Thread {}] Error while closing context", Thread.currentThread().getId(), e);
         }
     }
 
     public static void closeGlobalBrowser() {
         try {
+            logger.info("[Thread {}] Closing Global Browser and Playwright instances", Thread.currentThread().getId());
             if (getBrowser() != null) {
                 getBrowser().close();
                 tlBrowser.remove();
@@ -102,7 +109,7 @@ public class PlaywrightFactory {
                 tlPlaywright.remove();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("[Thread {}] Error while closing global browser", Thread.currentThread().getId(), e);
         }
     }
 }

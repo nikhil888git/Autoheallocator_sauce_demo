@@ -22,7 +22,6 @@ public class HomePage {
     private final Locator productImages;
     private final Locator productPrices;
     private final Locator addToCartButtons;
-    private final Locator cartBadge;
 
     public HomePage(Page page) {
         this.page = page;
@@ -46,31 +45,42 @@ public class HomePage {
         this.productPrices = smart.find(".inventory_item_price", "[data-test='inventory-item-price']");
 
         // Using SmartLocator with text-based fallback for Add to cart buttons
-        this.addToCartButtons = smart.find("button:has-text('Add to cart')", "[data-test^='add-to-cart']");
+        // FIXED: Generic locator for ALL add to cart buttons
+        this.addToCartButtons = smart.find(
+                "button[data-test^='add-to-cart']",
+                "button.btn_inventory",
+                "button:has-text('Add to cart')");
 
-        // Cart badge for bonus validation
-        this.cartBadge = smart.find(".shopping_cart_link", "[data-test='shopping-cart-badge']");
+        // Cart badge for bonus validation is removed from constructor to prevent
+        // premature AutoHeal timeouts when the cart is empty.
     }
 
     // public Locator getLogo() {
     // return logo;
     // }
     /* ================= SOCIAL LINKS ================= */
+    public Locator getHamburgerMenu() {
+        return smart.find("#react-burger-menu-btn", "button:has-text('Open Menu')");
+    }
 
     public Locator linkedinLink() {
-        return smart.find("[data-test='social-linkein']", "a[href*='linkedin']");
+        return smart.find("[data-test='social-linkedin']", "a[href*='linkedin']");
     }
 
     public Locator facebookLink() {
-        return smart.find("[data-test='social-facebok']", "a[href*='facebook']");
+        return smart.find("[data-test='social-facebook']", "a[href*='facebook']");
     }
 
     public Locator twitterLink() {
-        return smart.find("[data-test='social-twiter'], a[href*='twitter']");
+        return smart.find("[data-test='social-twitter'], a[href*='twitter']");
     }
 
-    public Locator getHamburgerMenu() {
-        return hamburgerMenu;
+    // 🔥 FIXED: Stable + fallback locators
+    public Locator getCartBadge() {
+        return smart.find(
+                "span[data-test='shopping-cart-badge']",
+                "#shopping_cart_container span",
+                "a.shopping_cart_link >> span");
     }
 
     public Locator getCartIcon() {
@@ -119,8 +129,13 @@ public class HomePage {
         }
     }
 
+    // 🔥 FIX 1: OPTIONAL ELEMENT HANDLING (MNC LEVEL)
     public String getCartItemCount() {
-        return cartBadge.textContent();
+        Locator badge = page.locator("span[data-test='shopping-cart-badge']");
+        if (badge.count() > 0) {
+            return badge.first().textContent().trim();
+        }
+        return "0"; // when badge not visible
     }
 
     public Page openLinkedIn() {

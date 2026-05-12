@@ -11,6 +11,8 @@ public class ConfigReader {
 
     static {
         // Load dotenv securely, ignore if missing (so CI/CD can use system env)
+        System.out.println("SYSTEM ENV = " + System.getProperty("ENV"));
+
         try {
             dotenv = Dotenv.configure().ignoreIfMissing().load();
         } catch (Exception e) {
@@ -30,24 +32,23 @@ public class ConfigReader {
     }
 
     public static String get(String key) {
-        // Priority 1: System Property (from Jenkins/GitHub Actions or CLI -D property)
         String value = System.getProperty(key);
-        if (value != null && !value.isEmpty()) return value;
+        if (value != null && !value.isEmpty())
+            return value;
 
-        // Priority 2: .env file
         if (dotenv != null) {
             value = dotenv.get(key);
-            if (value != null && !value.isEmpty()) return value;
+            if (value != null && !value.isEmpty())
+                return value;
         }
 
-        // Priority 3: config.properties default
         return prop.getProperty(key);
     }
 
     public static String getBaseUrl() {
         String env = get("ENV");
         if (env == null || env.isEmpty()) {
-            env = "PROD"; // Default
+            env = "QA"; // Default
         }
         String baseUrl = get(env.toUpperCase() + "_BASE_URL");
         if (baseUrl == null || baseUrl.isEmpty()) {

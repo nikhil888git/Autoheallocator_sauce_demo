@@ -1,77 +1,67 @@
 package com.demo.pages;
 
+import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.demo.utils.ConfigReader;
 import com.demo.utils.SmartLocator;
 
 public class LoginPage {
 
-    private Page page;
-    private SmartLocator smart;
+    private final Page page;
+    private final SmartLocator smart;
 
     public LoginPage(Page page) {
         this.page = page;
         this.smart = new SmartLocator(page);
     }
 
-    private com.microsoft.playwright.Locator getUsernameLocator() {
+    // ---------------- LOCATORS ----------------
+
+    public Locator username() {
         return smart.find("[data-test='username']", "#user-name");
     }
 
-    private com.microsoft.playwright.Locator getPasswordLocator() {
+    public Locator password() {
         return smart.find("[data-test='password']", "#password");
     }
 
-    private com.microsoft.playwright.Locator getLoginBtnLocator() {
-
-        return smart.find("id='login-button'", "[data-test='login-button']", "input[type='submit']");
+    public Locator loginButton() {
+        return smart.find("#login-button", "[data-test='login-button']", "input[type='submit']");
     }
 
-    // private com.microsoft.playwright.Locator getLogoLocator() {
-    // return smart.find("text=Swag Labs", ".login_logo");
-    // }
-
-    public com.microsoft.playwright.Locator getErrorMsgLocator() {
+    public Locator errorMessage() {
         return smart.find("[data-test='error']", ".error-message-container");
     }
+
+    // ---------------- ACTIONS ----------------
 
     public void open() {
         page.navigate(ConfigReader.getBaseUrl() + "/");
     }
 
     public void login(String user, String pass) {
-        getUsernameLocator().waitFor();
-        getUsernameLocator().fill(user);
-        getPasswordLocator().waitFor();
-        getPasswordLocator().fill(pass);
-        getLoginBtnLocator().waitFor();
-        getLoginBtnLocator().click();
-        page.waitForLoadState();
+        username().fill(user);
+        password().fill(pass);
+        loginButton().click();
     }
 
-    public boolean isLoginSuccessful() {
-        return page.url().contains("inventory");
+    // ---------------- STATE HELPERS ----------------
+
+    public boolean isLoginFormDisplayed() {
+        return username().isVisible()
+                && password().isVisible()
+                && loginButton().isVisible();
     }
 
-    // public boolean isLogoDisplayed() {
-    // return getLogoLocator().isVisible();
-    // }
-
-    public boolean isErrorMessageDisplayed() {
-        try {
-            getErrorMsgLocator().waitFor();
-            return getErrorMsgLocator().isVisible();
-        } catch (Exception e) {
-            return false;
-        }
+    public boolean isErrorVisible() {
+        return errorMessage().isVisible();
     }
 
-    public boolean isLoginButtonVisible() {
-        try {
-            return getLoginBtnLocator().isVisible();
-        } catch (Exception e) {
-            return false;
-        }
+    public boolean isOnInventoryPage() {
+        return page.url().contains("inventory.html");
     }
 
+    public Page getPage() {
+        return page;
+    }
 }
