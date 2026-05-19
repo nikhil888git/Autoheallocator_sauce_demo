@@ -31,10 +31,10 @@ public class CheckoutSteps {
         getCheckoutPage().clickCheckout();
     }
 
-    @When("user enters checkout details")
-    public void enter_checkout_details() {
-        getCheckoutPage().enterDetails("test", "test", "12345");
-    }
+    // @When("user enters checkout details")
+    // public void enter_checkout_details() {
+    // getCheckoutPage().enterDetails("test", "test", "12345");
+    // }
 
     @Then("user should complete the order successfully")
     public void verify_order_success() {
@@ -44,6 +44,7 @@ public class CheckoutSteps {
 
     @When("user enters checkout details {string} {string} {string}")
     public void enter_checkout_details(String firstName, String lastName, String postalCode) {
+
         getCheckoutPage().enterDetails(firstName, lastName, postalCode);
     }
 

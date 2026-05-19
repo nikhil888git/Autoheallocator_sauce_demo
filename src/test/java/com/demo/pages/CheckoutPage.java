@@ -85,6 +85,8 @@ public class CheckoutPage {
 
     public void completeCheckout() {
         continueBtn().click();
+        page.waitForLoadState();
+        finishBtn().waitFor();
         finishBtn().click();
     }
 
